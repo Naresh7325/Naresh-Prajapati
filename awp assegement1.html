@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="kanbanApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AngularJS Kanban Board</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-drag-and-drop-lists/2.1.0/angular-drag-and-drop-lists.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .kanban-board { display: flex; gap: 20px; }
+        .kanban-column { width: 30%; padding: 10px; background: #f4f4f4; border-radius: 5px; }
+        .kanban-task { padding: 10px; margin: 10px 0; background: white; border: 1px solid #ccc; cursor: grab; }
+    </style>
+</head>
+<body ng-controller="KanbanController">
+    <h2>Kanban Task Manager</h2>
+    <div class="kanban-board">
+        <div class="kanban-column" ng-repeat="(status, tasks) in taskList">
+            <h3>{{status}}</h3>
+            <div dnd-list="taskList[status]">
+                <div class="kanban-task" ng-repeat="task in tasks" dnd-draggable="task" dnd-moved="tasks.splice($index, 1)">
+                    {{task.name}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var app = angular.module('kanbanApp', ['dndLists']);
+        app.controller('KanbanController', function ($scope) {
+            $scope.taskList = {
+                'To Do': [
+                    { name: 'Task 1' },
+                    { name: 'Task 2' }
+                ],
+                'In Progress': [],
+                'Done': []
+            };
+        });
+    </script>
+</body>
+</html>
